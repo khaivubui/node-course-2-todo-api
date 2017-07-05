@@ -105,6 +105,7 @@ describe('GET /todos/:id', () => {
   });
 });
 
+//test PATCH /todos/:id
 describe('DELETE /todos/:id', () => {
   it('should remove a todo', (done) => {
     var hexId = todos[0]._id.toHexString();
@@ -130,7 +131,7 @@ describe('DELETE /todos/:id', () => {
     .expect(404)
     .end(done);
   });
-  
+
   it('should return 404 if object id is invalid', (done) => {
     request(app)
     .delete('/todos/123')
