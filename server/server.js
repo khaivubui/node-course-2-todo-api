@@ -12,6 +12,7 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
+//add 1 todo. Body is expected to be a json with 1 field
 app.post('/todos', (req, res) => {
   new Todo({ text: req.body.text })
   .save()
@@ -19,6 +20,7 @@ app.post('/todos', (req, res) => {
   .catch((e) => { res.status(400).send(e) });
 });
 
+//get all todos
 app.get('/todos', (req, res) => {
   Todo.find()
   .then((todos) => {
@@ -29,6 +31,7 @@ app.get('/todos', (req, res) => {
   .catch((e) => { res.status(400).send(e) })
 });
 
+//get 1 todo by id
 app.get('/todos/:id', (req, res) => {
   var id = req.params.id;
 
@@ -37,6 +40,25 @@ app.get('/todos/:id', (req, res) => {
   }
 
   Todo.findById(id).then((todo) => {
+    if (todo) {
+      res.status(200).send({ todo });
+    } else {
+      res.status(404).send();
+    }
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
+
+//delete 1 todo by id
+app.delete('/todos/:id', (req, res) => {
+  var id = req.params.id;
+
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  Todo.findByIdAndRemove(id).then((todo) => {
     if (todo) {
       res.status(200).send({ todo });
     } else {
