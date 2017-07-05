@@ -18,15 +18,15 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
   //   console.log(result);
   // });
 
-  db.collection('Users').findOneAndUpdate(
-  {
-    name: 'Emily'
-  },
-  {
-    $set: { name: 'Emily Lai' },
-    $inc: { age: 1 }
-  }
-  );
+  // db.collection('Users').findOneAndUpdate(
+  // {
+  //   name: 'Emily'
+  // },
+  // {
+  //   $set: { name: 'Emily Lai' },
+  //   $inc: { age: 1 }
+  // }
+  // );
 
   // db.close();
 });
