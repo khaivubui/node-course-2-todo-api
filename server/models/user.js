@@ -32,6 +32,7 @@ var UserSchema = new mongoose.Schema({
   }]
 });
 
+// changing a built in instance method
 UserSchema.methods.toJSON = function() {
   var user = this;
   var userObject = user.toObject();
@@ -39,6 +40,7 @@ UserSchema.methods.toJSON = function() {
   return _.pick(userObject, ['_id', 'email']);
 };
 
+//defining instance method
 UserSchema.methods.generateAuthToken = function () {
   var user = this;
   var access = 'auth';
@@ -52,6 +54,24 @@ UserSchema.methods.generateAuthToken = function () {
     return token;
   });
 };
+
+//defining model method, return a promise with found user passed in
+UserSchema.statics.findByToken = function(token) {
+  var User = this;
+  var decoded;
+
+  try {
+    decoded = jwt.verify(token, 'abc123');
+  } catch(e) {
+    return Promise.reject();
+  }
+
+  return User.findOne({
+    _id: decoded._id,
+    'tokens.token': token,
+    'tokens.access': 'auth'
+  });
+}
 
 var User = mongoose.model('User', UserSchema);
 
