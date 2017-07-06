@@ -15,6 +15,9 @@ const port = process.env.PORT;
 
 app.use(bodyParser.json());
 
+// ****************** Todo(s) ******************
+
+//                  - POST -
 //add 1 todo. Body is expected to be a json with 1 field
 app.post('/todos', (req, res) => {
   new Todo({ text: req.body.text })
@@ -23,6 +26,7 @@ app.post('/todos', (req, res) => {
   .catch((e) => { res.status(400).send(e) });
 });
 
+//                  - GET -
 //get all todos
 app.get('/todos', (req, res) => {
   Todo.find()
@@ -51,6 +55,7 @@ app.get('/todos/:id', (req, res) => {
   });
 });
 
+//                  - DELETE -
 //delete 1 todo by id
 app.delete('/todos/:id', (req, res) => {
   var id = req.params.id;
@@ -70,6 +75,8 @@ app.delete('/todos/:id', (req, res) => {
   });
 });
 
+//                  - PATCH -
+//modify 1 todo by id. Body is expected to be a json
 app.patch('/todos/:id', (req, res) => {
   var id = req.params.id;
   var body = _.pick(req.body, ['text', 'completed']);
@@ -92,6 +99,23 @@ app.patch('/todos/:id', (req, res) => {
   })
   .catch((e) => { res.status(400).send() });
 });
+
+// ****************** User(s) ******************
+
+//                  - POST -
+//add 1 user
+app.post('/users', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+  var user = new User(body);
+
+  user.save().then(() => {
+    return user.generateAuthToken();
+  }).then((token) => {
+    res.header('x-auth', token).send(user)
+  }).catch((e) => { res.status(400).send(e) });
+});
+
+// ****************** _ ******************
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
