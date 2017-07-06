@@ -33,6 +33,8 @@ var UserSchema = new mongoose.Schema({
   }]
 });
 
+// ****************** instance methods ******************
+
 // changing a built in instance method
 UserSchema.methods.toJSON = function() {
   var user = this;
@@ -55,6 +57,18 @@ UserSchema.methods.generateAuthToken = function () {
     return token;
   });
 };
+
+UserSchema.methods.removeToken = function (token) {
+  var user = this;
+
+  return user.update({
+    $pull: {
+      tokens: { token }
+    }
+  });
+};
+
+// ****************** model methods ******************
 
 //defining model method, return a promise with found user passed in
 UserSchema.statics.findByToken = function(token) {
@@ -94,6 +108,8 @@ UserSchema.statics.findByCredentials = function (email, password) {
     });
   });
 };
+
+// ****************** - ******************
 
 //defining mongoose middleware
 UserSchema.pre('save', function(next) {
