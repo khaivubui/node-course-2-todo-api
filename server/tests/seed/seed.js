@@ -20,19 +20,25 @@ const users = [{
   _id: userTwoId,
   email: 'xyz@789.com',
   password: 'xyz789',
+  tokens: [{
+    access: 'auth',
+    token: jwt.sign({ _id: userTwoId, access: 'auth' }, 'abc123').toString()
+  }]
 }];
 
 //2 items to be added to collection every test
 const todos = [
   {
     _id: new ObjectID(),
-    text: 'First test todo'
+    text: 'First test todo',
+    _creator: userOneId
   },
   {
     _id: new ObjectID(),
     text: 'Second test todo',
     completed: true,
-    completedAt: new Date().getTime()
+    completedAt: new Date().getTime(),
+    _creator: userTwoId
   }
 ];
 
